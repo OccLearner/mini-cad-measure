@@ -1,4 +1,15 @@
-import { FolderOpen, Redo2, RotateCcw, Save, Undo2, ZoomIn, ZoomOut } from 'lucide-react';
+import {
+  FolderOpen,
+  Maximize2,
+  Redo2,
+  RotateCcw,
+  Save,
+  Trash2,
+  Undo2,
+  ZoomIn,
+  ZoomOut
+} from 'lucide-react';
+import { getDocumentBounds } from '../cad/bounds';
 import { CANVAS_VIEWPORT_SIZE } from '../geometry/viewport';
 import { useDocumentStore } from '../store/useDocumentStore';
 import { useUiStore } from '../store/useUiStore';
@@ -6,16 +17,28 @@ import { useUiStore } from '../store/useUiStore';
 export function TopToolbar() {
   const canRedo = useDocumentStore((state) => state.redoStack.length > 0);
   const canUndo = useDocumentStore((state) => state.undoStack.length > 0);
+  const clearDocument = useDocumentStore((state) => state.clearDocument);
+  const entities = useDocumentStore((state) => state.entities);
   const loadLocalDocument = useDocumentStore((state) => state.loadLocalDocument);
+  const measurements = useDocumentStore((state) => state.measurements);
   const redo = useDocumentStore((state) => state.redo);
   const saveLocalDocument = useDocumentStore((state) => state.saveLocalDocument);
   const undo = useDocumentStore((state) => state.undo);
+  const fitToBounds = useUiStore((state) => state.fitToBounds);
   const resetView = useUiStore((state) => state.resetView);
   const viewport = useUiStore((state) => state.viewport);
   const zoomAt = useUiStore((state) => state.zoomAt);
   const zoomPoint = {
     x: CANVAS_VIEWPORT_SIZE.width / 2,
     y: CANVAS_VIEWPORT_SIZE.height / 2
+  };
+  const handleClear = () => {
+    if (window.confirm('清空当前画布？')) {
+      clearDocument();
+    }
+  };
+  const handleFitAll = () => {
+    fitToBounds(getDocumentBounds(entities, measurements));
   };
 
   return (
@@ -69,6 +92,15 @@ export function TopToolbar() {
         <button
           className="icon-button"
           type="button"
+          title="清空"
+          aria-label="清空"
+          onClick={handleClear}
+        >
+          <Trash2 size={18} strokeWidth={2} />
+        </button>
+        <button
+          className="icon-button"
+          type="button"
           title="缩小"
           aria-label="缩小"
           onClick={() => zoomAt(zoomPoint, viewport.zoom / 1.25)}
@@ -83,6 +115,15 @@ export function TopToolbar() {
           onClick={() => zoomAt(zoomPoint, viewport.zoom * 1.25)}
         >
           <ZoomIn size={18} strokeWidth={2} />
+        </button>
+        <button
+          className="icon-button"
+          type="button"
+          title="Fit All"
+          aria-label="Fit All"
+          onClick={handleFitAll}
+        >
+          <Maximize2 size={18} strokeWidth={2} />
         </button>
         <button
           className="icon-button"

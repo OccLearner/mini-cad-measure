@@ -24,6 +24,10 @@ type DocumentSnapshot = {
 
 type SaveStatus = 'idle' | 'saved' | 'loaded' | 'error' | 'empty';
 
+type ClearDocumentOptions = {
+  recordHistory?: boolean;
+};
+
 type DocumentState = DocumentSnapshot & {
   draft: DrawingDraft | null;
   measurementDraft: MeasurementDraft | null;
@@ -32,9 +36,11 @@ type DocumentState = DocumentSnapshot & {
   undoStack: DocumentSnapshot[];
   cancelDraft: () => void;
   cancelMeasurementDraft: () => void;
-  clearDocument: () => void;
+  clearDocument: (options?: ClearDocumentOptions) => boolean;
   commitDraft: () => CadEntity | null;
   commitMeasurementDraft: () => DistanceMeasurement | null;
+  deleteMeasurement: (id: string) => boolean;
+  deleteSelectedEntity: () => boolean;
   loadLocalDocument: (storage?: Pick<Storage, 'getItem'>) => boolean;
   redo: () => void;
   saveLocalDocument: (storage?: Pick<Storage, 'setItem'>) => boolean;
@@ -83,15 +89,42 @@ export const useDocumentStore = create<DocumentState>((set, get) => ({
   undoStack: [],
   cancelDraft: () => set({ draft: null }),
   cancelMeasurementDraft: () => set({ measurementDraft: null }),
-  clearDocument: () =>
-    set({
+  clearDocument: (options) => {
+    const state = get();
+    const recordHistory = options?.recordHistory ?? true;
+    const hasClearableState =
+      state.entities.length > 0 ||
+      state.measurements.length > 0 ||
+      Boolean(state.draft) ||
+      Boolean(state.measurementDraft) ||
+      Boolean(state.selectedEntityId);
+
+    if (!hasClearableState) {
+      if (!recordHistory) {
+        set({
+          ...initialSnapshot(),
+          draft: null,
+          measurementDraft: null,
+          redoStack: [],
+          saveStatus: 'idle',
+          undoStack: []
+        });
+      }
+
+      return false;
+    }
+
+    set((currentState) => ({
       ...initialSnapshot(),
       draft: null,
       measurementDraft: null,
       redoStack: [],
       saveStatus: 'idle',
-      undoStack: []
-    }),
+      undoStack: recordHistory ? pushUndo(currentState) : []
+    }));
+
+    return true;
+  },
   commitDraft: () => {
     const { draft, nextEntityId } = get();
 
@@ -146,6 +179,48 @@ export const useDocumentStore = create<DocumentState>((set, get) => ({
     }));
 
     return measurement;
+  },
+  deleteMeasurement: (id) => {
+    const { measurements } = get();
+
+    if (!measurements.some((measurement) => measurement.id === id)) {
+      return false;
+    }
+
+    set((state) => ({
+      measurements: state.measurements.filter((measurement) => measurement.id !== id),
+      redoStack: [],
+      saveStatus: 'idle',
+      undoStack: pushUndo(state)
+    }));
+
+    return true;
+  },
+  deleteSelectedEntity: () => {
+    const { selectedEntityId } = get();
+
+    if (!selectedEntityId) {
+      return false;
+    }
+
+    const targetExists = get().entities.some((entity) => entity.id === selectedEntityId);
+
+    if (!targetExists) {
+      set({ selectedEntityId: null });
+      return false;
+    }
+
+    set((state) => ({
+      draft: null,
+      entities: state.entities.filter((entity) => entity.id !== selectedEntityId),
+      measurementDraft: null,
+      redoStack: [],
+      saveStatus: 'idle',
+      selectedEntityId: null,
+      undoStack: pushUndo(state)
+    }));
+
+    return true;
   },
   loadLocalDocument: (storage) => {
     const targetStorage = storage ?? getBrowserStorage();

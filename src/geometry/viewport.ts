@@ -104,6 +104,31 @@ export const getVisibleWorldBounds = (
   };
 };
 
+export const fitViewportToWorldBounds = (
+  bounds: WorldBounds | null,
+  viewportSize: ViewportSize,
+  padding = 48
+): Viewport => {
+  if (!bounds) {
+    return createDefaultViewport();
+  }
+
+  const availableWidth = Math.max(1, viewportSize.width - padding * 2);
+  const availableHeight = Math.max(1, viewportSize.height - padding * 2);
+  const boundsWidth = bounds.maxX - bounds.minX;
+  const boundsHeight = bounds.maxY - bounds.minY;
+  const zoomX = boundsWidth > 0 ? availableWidth / boundsWidth : MAX_ZOOM;
+  const zoomY = boundsHeight > 0 ? availableHeight / boundsHeight : MAX_ZOOM;
+
+  return {
+    center: {
+      x: (bounds.minX + bounds.maxX) / 2,
+      y: (bounds.minY + bounds.maxY) / 2
+    },
+    zoom: clampZoom(Math.min(zoomX, zoomY))
+  };
+};
+
 export const toWorldTransform = (viewport: Viewport, viewportSize: ViewportSize) =>
   [
     `translate(${viewportSize.width / 2} ${viewportSize.height / 2})`,

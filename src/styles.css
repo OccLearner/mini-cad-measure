@@ -319,6 +319,76 @@ button {
   padding: 16px;
 }
 
+.measurement-list {
+  border-top: 1px solid #e0e6ee;
+}
+
+.measurement-list-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+}
+
+.measurement-list-header h3 {
+  font-size: 14px;
+  margin: 0;
+}
+
+.measurement-list-header span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.measurement-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.measurement-list li {
+  align-items: center;
+  border-top: 1px solid #eef2f6;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 44px;
+  padding: 8px 16px;
+}
+
+.measurement-list li div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.measurement-list strong {
+  font-size: 13px;
+}
+
+.measurement-list li span {
+  color: #64748b;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-button {
+  background: #ffffff;
+  border: 1px solid #cfd7e2;
+  border-radius: 4px;
+  color: #334155;
+  cursor: pointer;
+  font-size: 12px;
+  height: 28px;
+  padding: 0 8px;
+}
+
+.text-button:hover {
+  background: #f3f6fa;
+  border-color: #9aa8ba;
+}
+
 .status-bar {
   align-items: center;
   background: #26323f;

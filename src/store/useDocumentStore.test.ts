@@ -3,7 +3,7 @@ import { useDocumentStore } from './useDocumentStore';
 
 describe('useDocumentStore', () => {
   beforeEach(() => {
-    useDocumentStore.getState().clearDocument();
+    useDocumentStore.getState().clearDocument({ recordHistory: false });
   });
 
   it('commits valid drawing drafts as entities', () => {
@@ -83,6 +83,50 @@ describe('useDocumentStore', () => {
     expect(useDocumentStore.getState().measurements).toHaveLength(1);
   });
 
+  it('deletes the selected entity with undo support', () => {
+    useDocumentStore.getState().startDraft('line', { x: 0, y: 0 });
+    useDocumentStore.getState().updateDraft({ x: 10, y: 0 });
+    useDocumentStore.getState().commitDraft();
+
+    expect(useDocumentStore.getState().deleteSelectedEntity()).toBe(true);
+    expect(useDocumentStore.getState().entities).toHaveLength(0);
+    expect(useDocumentStore.getState().selectedEntityId).toBeNull();
+
+    useDocumentStore.getState().undo();
+    expect(useDocumentStore.getState().entities).toHaveLength(1);
+    expect(useDocumentStore.getState().selectedEntityId).toBe('entity-0001');
+  });
+
+  it('deletes measurements with undo support', () => {
+    useDocumentStore.getState().startMeasurementDraft({ x: 0, y: 0 });
+    useDocumentStore.getState().updateMeasurementDraft({ x: 3, y: 4 });
+    useDocumentStore.getState().commitMeasurementDraft();
+
+    expect(useDocumentStore.getState().deleteMeasurement('measurement-0001')).toBe(true);
+    expect(useDocumentStore.getState().measurements).toHaveLength(0);
+
+    useDocumentStore.getState().undo();
+    expect(useDocumentStore.getState().measurements).toHaveLength(1);
+  });
+
+  it('clears the document with undo support', () => {
+    useDocumentStore.getState().startDraft('rectangle', { x: 0, y: 0 });
+    useDocumentStore.getState().updateDraft({ x: 8, y: 4 });
+    useDocumentStore.getState().commitDraft();
+    useDocumentStore.getState().startMeasurementDraft({ x: 0, y: 0 });
+    useDocumentStore.getState().updateMeasurementDraft({ x: 3, y: 4 });
+    useDocumentStore.getState().commitMeasurementDraft();
+
+    expect(useDocumentStore.getState().clearDocument()).toBe(true);
+    expect(useDocumentStore.getState().entities).toHaveLength(0);
+    expect(useDocumentStore.getState().measurements).toHaveLength(0);
+    expect(useDocumentStore.getState().selectedEntityId).toBeNull();
+
+    useDocumentStore.getState().undo();
+    expect(useDocumentStore.getState().entities).toHaveLength(1);
+    expect(useDocumentStore.getState().measurements).toHaveLength(1);
+  });
+
   it('undoes and redoes document mutations', () => {
     useDocumentStore.getState().startDraft('line', { x: 0, y: 0 });
     useDocumentStore.getState().updateDraft({ x: 10, y: 0 });
@@ -113,7 +157,7 @@ describe('useDocumentStore', () => {
 
     expect(useDocumentStore.getState().saveLocalDocument(storage)).toBe(true);
 
-    useDocumentStore.getState().clearDocument();
+    useDocumentStore.getState().clearDocument({ recordHistory: false });
     expect(useDocumentStore.getState().entities).toHaveLength(0);
 
     expect(useDocumentStore.getState().loadLocalDocument(storage)).toBe(true);

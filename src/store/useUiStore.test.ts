@@ -35,4 +35,18 @@ describe('useUiStore', () => {
 
     expect(useUiStore.getState().viewport.center).toEqual({ x: -80, y: -40 });
   });
+
+  it('fits the viewport to world bounds', () => {
+    useUiStore.getState().fitToBounds({
+      maxX: 120,
+      maxY: 50,
+      minX: -80,
+      minY: -50
+    });
+
+    expect(useUiStore.getState().viewport).toEqual({
+      center: { x: 20, y: 0 },
+      zoom: 4.32
+    });
+  });
 });

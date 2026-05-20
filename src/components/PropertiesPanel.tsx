@@ -1,4 +1,5 @@
 import { getDistance, type CadEntity } from '../cad/entities';
+import type { DistanceMeasurement } from '../cad/measurements';
 import { useDocumentStore } from '../store/useDocumentStore';
 import { formatCoordinate } from '../store/useUiStore';
 
@@ -77,8 +78,49 @@ function GeometryProperties({ entity }: { entity: CadEntity }) {
   );
 }
 
+function MeasurementList({
+  measurements,
+  onDeleteMeasurement
+}: {
+  measurements: DistanceMeasurement[];
+  onDeleteMeasurement: (id: string) => void;
+}) {
+  return (
+    <section className="measurement-list" aria-label="测量列表">
+      <div className="measurement-list-header">
+        <h3>测量</h3>
+        <span>{measurements.length}</span>
+      </div>
+      {measurements.length > 0 ? (
+        <ul>
+          {measurements.map((measurement) => (
+            <li key={measurement.id}>
+              <div>
+                <strong>{formatCoordinate(measurement.distance)}</strong>
+                <span>{measurement.id}</span>
+              </div>
+              <button
+                className="text-button"
+                type="button"
+                aria-label={`删除 ${measurement.id}`}
+                onClick={() => onDeleteMeasurement(measurement.id)}
+              >
+                删除
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="empty-properties">暂无测量</div>
+      )}
+    </section>
+  );
+}
+
 export function PropertiesPanel() {
   const entities = useDocumentStore((state) => state.entities);
+  const deleteMeasurement = useDocumentStore((state) => state.deleteMeasurement);
+  const measurements = useDocumentStore((state) => state.measurements);
   const selectedEntityId = useDocumentStore((state) => state.selectedEntityId);
   const updateEntityStyle = useDocumentStore((state) => state.updateEntityStyle);
   const selectedEntity = entities.find((entity) => entity.id === selectedEntityId) ?? null;
@@ -141,6 +183,7 @@ export function PropertiesPanel() {
       ) : (
         <div className="empty-properties">未选择对象</div>
       )}
+      <MeasurementList measurements={measurements} onDeleteMeasurement={deleteMeasurement} />
     </aside>
   );
 }

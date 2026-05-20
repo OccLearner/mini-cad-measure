@@ -3,6 +3,7 @@ import {
   CANVAS_VIEWPORT_SIZE,
   clampZoom,
   createDefaultViewport,
+  fitViewportToWorldBounds,
   getVisibleWorldBounds,
   panViewportByScreenDelta,
   screenToWorld,
@@ -64,5 +65,27 @@ describe('viewport math', () => {
     expect(clampZoom(100)).toBe(8);
     expect(clampZoom(0.01)).toBe(0.125);
     expect(clampZoom(Number.NaN)).toBe(1);
+  });
+
+  it('fits the viewport around world bounds with padding', () => {
+    expect(
+      fitViewportToWorldBounds(
+        {
+          maxX: 120,
+          maxY: 50,
+          minX: -80,
+          minY: -50
+        },
+        CANVAS_VIEWPORT_SIZE,
+        40
+      )
+    ).toEqual({
+      center: { x: 20, y: 0 },
+      zoom: 4.4
+    });
+  });
+
+  it('falls back to the default viewport when fitting empty content', () => {
+    expect(fitViewportToWorldBounds(null, CANVAS_VIEWPORT_SIZE)).toEqual(createDefaultViewport());
   });
 });

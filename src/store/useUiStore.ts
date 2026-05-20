@@ -3,9 +3,11 @@ import {
   CANVAS_VIEWPORT_SIZE,
   clampZoom,
   createDefaultViewport,
+  fitViewportToWorldBounds,
   panViewportByScreenDelta,
   type Point,
   type Viewport,
+  type WorldBounds,
   zoomViewportAt
 } from '../geometry/viewport';
 
@@ -15,6 +17,7 @@ type UiState = {
   activeTool: ToolId;
   cursorWorld: Point;
   viewport: Viewport;
+  fitToBounds: (bounds: WorldBounds | null) => void;
   panByScreenDelta: (delta: Point) => void;
   resetView: () => void;
   setActiveTool: (tool: ToolId) => void;
@@ -39,6 +42,10 @@ export const formatCoordinate = (value: number) => {
 export const useUiStore = create<UiState>((set) => ({
   activeTool: 'select',
   ...initialViewport,
+  fitToBounds: (bounds) =>
+    set({
+      viewport: fitViewportToWorldBounds(bounds, CANVAS_VIEWPORT_SIZE)
+    }),
   panByScreenDelta: (delta) =>
     set((state) => ({
       viewport: panViewportByScreenDelta(state.viewport, delta)

@@ -4,10 +4,12 @@ import { LeftToolbar } from './components/LeftToolbar';
 import { PropertiesPanel } from './components/PropertiesPanel';
 import { StatusBar } from './components/StatusBar';
 import { TopToolbar } from './components/TopToolbar';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useDocumentStore } from './store/useDocumentStore';
 
 export default function App() {
   const loadLocalDocument = useDocumentStore((state) => state.loadLocalDocument);
+  useKeyboardShortcuts();
 
   useEffect(() => {
     loadLocalDocument();
