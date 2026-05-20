@@ -10,20 +10,20 @@
 
 ## 已完成内容
 
-| 项目 | 状态 | 证据 |
-| --- | --- | --- |
-| SVG 画布 | 已完成 | `CadCanvas` 渲染 `<svg>`，使用固定 `viewBox` 和 SVG 图元。 |
-| 世界坐标 / 屏幕坐标转换 | 已完成 | `src/geometry/viewport.ts` 提供 `screenToWorld`、`worldToScreen`、`toWorldTransform`，并有 Vitest 覆盖。 |
-| 网格和坐标轴 | 已完成 | `CadCanvas` 根据可见世界边界生成网格刻度，并渲染 X/Y 轴与原点。 |
-| 鼠标坐标显示 | 已完成 | `CadCanvas` 更新 `cursorWorld`，`StatusBar` 显示当前 X/Y。 |
-| 平移和缩放 | 已完成 | 支持 pan 工具、鼠标中键平移、滚轮缩放、工具栏缩放和重置视图。 |
-| 绘制直线、矩形、圆 | 已完成 | `cad/entities.ts` 定义实体与 draft 创建逻辑，`CadCanvas` 实现绘制流程，`CadEntities` 渲染。 |
-| 选择对象 | 已完成 | select 工具调用 `hitTestEntities`，选中对象有 selection halo。 |
-| 属性面板 | 已完成 | `PropertiesPanel` 显示类型、ID、几何信息，并支持线宽和颜色编辑。 |
-| 两点距离测量 | 已完成 | `cad/measurements.ts` 创建测量，`CadMeasurements` 渲染测量线、端点和距离标签。 |
-| 撤销 / 重做 | 基础可用 | `useDocumentStore` 有 undo/redo 栈，顶部工具栏有按钮；缺少键盘快捷键。 |
-| 本地保存 / 加载 | 基础可用 | `documentPersistence.ts` 使用版本化 `localStorage` payload，App 启动时尝试加载。 |
-| Playwright E2E 测试 | 已具备基础覆盖 | `e2e/app.spec.ts` 覆盖 shell 渲染、绘制、选择、测量、历史和保存加载 smoke flow。 |
+| 项目                    | 状态           | 证据                                                                                                     |
+| ----------------------- | -------------- | -------------------------------------------------------------------------------------------------------- |
+| SVG 画布                | 已完成         | `CadCanvas` 渲染 `<svg>`，使用固定 `viewBox` 和 SVG 图元。                                               |
+| 世界坐标 / 屏幕坐标转换 | 已完成         | `src/geometry/viewport.ts` 提供 `screenToWorld`、`worldToScreen`、`toWorldTransform`，并有 Vitest 覆盖。 |
+| 网格和坐标轴            | 已完成         | `CadCanvas` 根据可见世界边界生成网格刻度，并渲染 X/Y 轴与原点。                                          |
+| 鼠标坐标显示            | 已完成         | `CadCanvas` 更新 `cursorWorld`，`StatusBar` 显示当前 X/Y。                                               |
+| 平移和缩放              | 已完成         | 支持 pan 工具、鼠标中键平移、滚轮缩放、工具栏缩放和重置视图。                                            |
+| 绘制直线、矩形、圆      | 已完成         | `cad/entities.ts` 定义实体与 draft 创建逻辑，`CadCanvas` 实现绘制流程，`CadEntities` 渲染。              |
+| 选择对象                | 已完成         | select 工具调用 `hitTestEntities`，选中对象有 selection halo。                                           |
+| 属性面板                | 已完成         | `PropertiesPanel` 显示类型、ID、几何信息，并支持线宽和颜色编辑。                                         |
+| 两点距离测量            | 已完成         | `cad/measurements.ts` 创建测量，`CadMeasurements` 渲染测量线、端点和距离标签。                           |
+| 撤销 / 重做             | 基础可用       | `useDocumentStore` 有 undo/redo 栈，顶部工具栏有按钮；缺少键盘快捷键。                                   |
+| 本地保存 / 加载         | 基础可用       | `documentPersistence.ts` 使用版本化 `localStorage` payload，App 启动时尝试加载。                         |
+| Playwright E2E 测试     | 已具备基础覆盖 | `e2e/app.spec.ts` 覆盖 shell 渲染、绘制、选择、测量、历史和保存加载 smoke flow。                         |
 
 与文档的一致性：
 
@@ -83,12 +83,12 @@
 
 按用户要求直接运行的命令：
 
-| 命令 | 结果 | 失败原因 / 输出摘要 |
-| --- | --- | --- |
-| `pnpm test` | 失败，命令未启动 | PowerShell 报错：无法将 `pnpm` 识别为 cmdlet、函数、脚本文件或可运行程序。 |
-| `pnpm lint` | 失败，命令未启动 | 同上，`pnpm` 不在当前 PATH / shim 不可用。 |
-| `pnpm build` | 失败，命令未启动 | 同上，`pnpm` 不在当前 PATH / shim 不可用。 |
-| `pnpm test:e2e` | 失败，命令未启动 | 同上，`pnpm` 不在当前 PATH / shim 不可用。 |
+| 命令            | 结果             | 失败原因 / 输出摘要                                                        |
+| --------------- | ---------------- | -------------------------------------------------------------------------- |
+| `pnpm test`     | 失败，命令未启动 | PowerShell 报错：无法将 `pnpm` 识别为 cmdlet、函数、脚本文件或可运行程序。 |
+| `pnpm lint`     | 失败，命令未启动 | 同上，`pnpm` 不在当前 PATH / shim 不可用。                                 |
+| `pnpm build`    | 失败，命令未启动 | 同上，`pnpm` 不在当前 PATH / shim 不可用。                                 |
+| `pnpm test:e2e` | 失败，命令未启动 | 同上，`pnpm` 不在当前 PATH / shim 不可用。                                 |
 
 环境补充：
 
@@ -100,10 +100,9 @@
 
 使用 Corepack 复核的等价命令：
 
-| 命令 | 结果 | 输出摘要 |
-| --- | --- | --- |
-| `corepack pnpm test` | 通过 | Vitest 7 个测试文件、33 个测试全部通过。 |
-| `corepack pnpm lint` | 通过 | `eslint . --max-warnings=0` 无报错。 |
-| `corepack pnpm build` | 通过 | `tsc -b && vite build` 成功，Vite 构建完成。 |
+| 命令                     | 结果               | 输出摘要                                                                       |
+| ------------------------ | ------------------ | ------------------------------------------------------------------------------ |
+| `corepack pnpm test`     | 通过               | Vitest 7 个测试文件、33 个测试全部通过。                                       |
+| `corepack pnpm lint`     | 通过               | `eslint . --max-warnings=0` 无报错。                                           |
+| `corepack pnpm build`    | 通过               | `tsc -b && vite build` 成功，Vite 构建完成。                                   |
 | `corepack pnpm test:e2e` | 用例通过但命令超时 | Playwright 两个 msedge 用例均显示 `ok`，但进程 180 秒未退出，被 timeout 终止。 |
-
