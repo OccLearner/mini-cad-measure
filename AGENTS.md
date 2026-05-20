@@ -17,12 +17,14 @@
 - Use SVG elements for CAD rendering.
 - Keep UI text concise and utilitarian.
 - Use Prettier for formatting and ESLint for static checks.
+- After adding or modifying files, run Prettier on the touched files before handoff.
 
 ## Verification
 
 Before handing off code changes, run:
 
 ```sh
+pnpm format:check
 pnpm test
 pnpm lint
 pnpm build
