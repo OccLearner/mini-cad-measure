@@ -19,6 +19,15 @@
 - Use Prettier for formatting and ESLint for static checks.
 - After adding or modifying files, run Prettier on the touched files before handoff.
 
+## Codex Instruction Capture
+
+- Before starting a new Phase or subtask, create or update the corresponding `docs/phase-*.md` with the task goal, scope, technical requirements, test requirements, acceptance criteria, and current status.
+- Track subtask status in the relevant phase document using only: `Not Started`, `In Progress`, `Done`, or `Blocked`.
+- After completing a subtask, update the relevant phase document with what was completed, files changed, tests run, failures or blockers, and recommended next steps.
+- Save repeatable or important Codex prompts in `docs/codex-prompts.md`; one-off bug-fix prompts do not need to be saved unless they establish a long-term rule.
+- When development reveals a long-term rule or repeated issue, update `docs/review.md` or this `AGENTS.md`.
+- Do not copy whole chat transcripts into docs. Keep only reusable, executable, and verifiable instructions.
+
 ## Verification
 
 Before handing off code changes, run:
